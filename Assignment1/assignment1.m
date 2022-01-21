@@ -31,3 +31,5 @@
  
  %Magnitude plot for post window operation
  fvtool(window_filter2)
+ 
+ fvtool(win(N1))
