@@ -1,6 +1,6 @@
  %Parameter list for the filter1
  fs1 = 1600;
- N1 = 39;
+ N1 = 101;
  fc1 = 400;
  
  %Calling the filter funtion for the filter1
@@ -16,7 +16,7 @@
  fvtool(window_filter1)
  
   %Parameter list for the filter2
- fs2 = 3200;
+ fs2 = 6400;
  N2 = 39;
  fc2 = 400;
  
@@ -32,4 +32,4 @@
  %Magnitude plot for post window operation
  fvtool(window_filter2)
  
- fvtool(win(N1))
+ 
