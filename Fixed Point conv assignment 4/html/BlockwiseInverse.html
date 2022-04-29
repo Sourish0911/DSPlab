@@ -1,0 +1,246 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>BlockwiseInverse</title><meta name="generator" content="MATLAB 9.8"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-04-10"><meta name="DC.source" content="BlockwiseInverse.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">%Declare the Matrix</span>
+A = [1 2 3 6 3;2 5 4 1 3;1 3 5 1 5;3 2 1 4 2; 4 5 6 4 2];
+
+<span class="comment">%Calculate the Inverse of the MAtrix Using MATLAB Built in Function</span>
+B = inv(A);
+
+<span class="comment">%Call the Blockwise Inversion function to calculate the inverse</span>
+Ainv = BlockwiseInv(A);
+
+<span class="comment">%Display the Inverse Matrix</span>
+disp(Ainv)
+</pre><pre class="codeinput"><span class="comment">%%Function Starts for Blockwise Inversion%%</span>
+<span class="keyword">function</span> Ainv = BlockwiseInv(A)
+[m,n]=size(A);
+<span class="comment">%Check if the matrix is sqaure matrix or not if not show error in inverting the matrix%</span>
+    <span class="keyword">if</span> m ~= n || rank(A) &lt; n
+        fprintf(<span class="string">"Inverse not posssible"</span>);
+
+    <span class="comment">%If the Inverse Matrix is of Size 1 then Calculate inverse using below operation</span>
+    <span class="keyword">elseif</span> m == n  &amp;&amp; m == 1
+        Ainv = 1/A;
+
+    <span class="comment">%If the matrix is 2x2 then invert it using the function made to invert the 2x2 matrix%</span>
+    <span class="keyword">elseif</span> m == 2 &amp;&amp; n == 2
+        Ainv = TwoxTwo(A);
+
+    <span class="comment">%Devide the Matrix into blocks and then Perform the inverse on it</span>
+    <span class="keyword">elseif</span> m == n &amp;&amp; m&gt;=2
+        <span class="comment">%Devide the Matrix Block 1 into MAtrix of n-1 x n-1 Called A</span>
+        <span class="keyword">for</span> i = 1:n-1
+            <span class="keyword">for</span> j = 1:n-1
+                A1(i,j) = A(i,j);
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+        <span class="comment">%Divide the Matrix Block into Matrix B of size of n-1 x 1</span>
+        <span class="keyword">for</span> i=1:n-1
+            A2(i,1)=A(i,n);
+        <span class="keyword">end</span>
+        <span class="comment">%Divide the Matrix Block into Matrix C of size of 1 x n-1</span>
+        <span class="keyword">for</span> i=1:n-1
+            A3(1,i)=A(n,i);
+        <span class="keyword">end</span>
+
+        <span class="comment">%Final Element of n x n Matrix into D</span>
+        A4 = A(n,n);
+
+        <span class="comment">%Calculation of inverse of A</span>
+        A1inv = BlockwiseInv(A1);
+
+        <span class="comment">%Calculate the Schur Complement using A B C D blocks of the Matrix</span>
+        SchurComp1 = SchurComp(A1,A2,A3,A4);
+
+        <span class="comment">%Calculation of the Blockwise Inverse using the Formula shown in</span>
+        <span class="comment">%Above Explanation</span>
+        B1 = A1inv+A1inv*A2*SchurComp1*A3*A1inv;
+        B2 = -1*A1inv*A2*SchurComp1;
+        B3 = -1*SchurComp1*A3*A1inv;
+        B4 = SchurComp1;
+
+        <span class="comment">%Concatenate the Matrix to retrun the final Inverse Matrix</span>
+        B12 = [B1 B2];
+        B34 = [B3 B4];
+        Ainv = [B12;B34];
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><pre class="codeinput"><span class="comment">%Calculation of Achur Complement of the Matrix Based on Blocks ABCD</span>
+<span class="keyword">function</span> Sch = SchurComp(A,B,C,D)
+Sch1 = D - C*BlockwiseInv(A)*B;
+Sch = BlockwiseInv(Sch1);
+<span class="keyword">end</span>
+</pre><pre class="codeinput"><span class="comment">%Inverse calculation of 2x2 MAtrix</span>
+<span class="keyword">function</span> a = TwoxTwo(A)
+temp = 1/det(A);
+<span class="keyword">if</span> det(A) == 0
+    fprintf(<span class="string">"Non Invertible matrix"</span>);
+    <span class="keyword">return</span>
+<span class="keyword">end</span>
+a(1,1) = A(2,2);
+a(1,2) = -A(1,2);
+a(2,1) = -A(2,1);
+a(2,2) = A(1,1);
+a = temp*a;
+ <span class="keyword">end</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%Declare the Matrix
+A = [1 2 3 6 3;2 5 4 1 3;1 3 5 1 5;3 2 1 4 2; 4 5 6 4 2];
+
+%Calculate the Inverse of the MAtrix Using MATLAB Built in Function 
+B = inv(A);
+
+%Call the Blockwise Inversion function to calculate the inverse
+Ainv = BlockwiseInv(A);
+
+%Display the Inverse Matrix
+disp(Ainv)
+
+%%
+%%Function Starts for Blockwise Inversion%%
+function Ainv = BlockwiseInv(A)
+[m,n]=size(A);
+%Check if the matrix is sqaure matrix or not if not show error in inverting the matrix%
+    if m ~= n || rank(A) < n
+        fprintf("Inverse not posssible");
+    
+    %If the Inverse Matrix is of Size 1 then Calculate inverse using below operation
+    elseif m == n  && m == 1
+        Ainv = 1/A;
+        
+    %If the matrix is 2x2 then invert it using the function made to invert the 2x2 matrix%
+    elseif m == 2 && n == 2
+        Ainv = TwoxTwo(A);
+        
+    %Devide the Matrix into blocks and then Perform the inverse on it
+    elseif m == n && m>=2
+        %Devide the Matrix Block 1 into MAtrix of n-1 x n-1 Called A
+        for i = 1:n-1
+            for j = 1:n-1
+                A1(i,j) = A(i,j); 
+            end
+        end
+        %Divide the Matrix Block into Matrix B of size of n-1 x 1
+        for i=1:n-1
+            A2(i,1)=A(i,n);
+        end
+        %Divide the Matrix Block into Matrix C of size of 1 x n-1
+        for i=1:n-1
+            A3(1,i)=A(n,i);
+        end
+        
+        %Final Element of n x n Matrix into D
+        A4 = A(n,n);
+        
+        %Calculation of inverse of A
+        A1inv = BlockwiseInv(A1);
+        
+        %Calculate the Schur Complement using A B C D blocks of the Matrix
+        SchurComp1 = SchurComp(A1,A2,A3,A4);
+        
+        %Calculation of the Blockwise Inverse using the Formula shown in
+        %Above Explanation
+        B1 = A1inv+A1inv*A2*SchurComp1*A3*A1inv;
+        B2 = -1*A1inv*A2*SchurComp1;
+        B3 = -1*SchurComp1*A3*A1inv;
+        B4 = SchurComp1;
+        
+        %Concatenate the Matrix to retrun the final Inverse Matrix
+        B12 = [B1 B2];
+        B34 = [B3 B4];
+        Ainv = [B12;B34]; 
+    end
+end
+
+
+%%
+%Calculation of Achur Complement of the Matrix Based on Blocks ABCD
+function Sch = SchurComp(A,B,C,D)
+Sch1 = D - C*BlockwiseInv(A)*B;
+Sch = BlockwiseInv(Sch1);
+end
+
+%%
+%Inverse calculation of 2x2 MAtrix
+function a = TwoxTwo(A)
+temp = 1/det(A);
+if det(A) == 0
+    fprintf("Non Invertible matrix");
+    return
+end
+a(1,1) = A(2,2);
+a(1,2) = -A(1,2);
+a(2,1) = -A(2,1);
+a(2,2) = A(1,1);
+a = temp*a;
+ end
+##### SOURCE END #####
+--></body></html>
